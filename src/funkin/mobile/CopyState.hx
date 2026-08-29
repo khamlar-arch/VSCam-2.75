@@ -86,7 +86,7 @@ class CopyState extends FlxState
 		loadedText.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, CENTER);
 		add(loadedText);
 
-		thread = new ThreadPool(0, CoolUtil.getCPUThreadsCount());
+		thread = new ThreadPool(0, 1);
 		thread.doWork.add(function(poop)
 		{
 			for (file in locatedFiles)
