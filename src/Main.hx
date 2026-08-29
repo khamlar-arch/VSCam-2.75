@@ -51,6 +51,9 @@ class Main extends Sprite {
 		#if mobile
 		fpsCounter.x += FlxG.game.x;
 		fpsCounter.y += FlxG.game.y;
+		#if android
+		FlxG.android.preventDefaultKeys = [BACK];
+		#end
 		#end
 
 		@:privateAccess FlxG.keys._nativeCorrection.set("0_43", FlxKey.PLUS);
@@ -156,9 +159,6 @@ class InitState extends flixel.FlxState {
 		FlxG.drawFramerate = FlxG.updateFramerate = Settings.data.framerate;
 		FlxG.game.focusLostFramerate = Math.floor(Settings.data.framerate / 4);
 		FlxG.keys.preventDefaultKeys = [TAB];
-		#if android
-		FlxG.android.preventDefaultKeys = [BACK];
-		#end
 		FlxG.cameras.useBufferLocking = true;
 		FlxG.autoPause = Settings.data.autoPause;
 		FlxAudioHandler.init();
