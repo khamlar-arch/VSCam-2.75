@@ -11,6 +11,10 @@ import openfl.Lib;
 import openfl.display.Sprite;
 import openfl.events.UncaughtErrorEvent;
 
+#if mobile
+import funkin.mobile.CopyState;
+#end
+
 #if (linux && !debug)
 @:cppInclude('../../../../src/_external/gamemode_client.h') // i don't care enough to properly point back to the src folder whatever it works fuck you
 @:cppFileCode('#define GAMEMODE_AUTO')
@@ -29,12 +33,25 @@ class Main extends Sprite {
 	public function new() {
 		super();
 
+		funkin.mobile.CrashHandler.init();
+		#if mobile
+		Sys.setCwd(StorageUtil.getStorageDirectory());
+		#if android
+		StorageUtil.requestPermissions();
+		#end
+		#end
+
 		Lib.current.loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, onCrash);
 
-		addChild(new FlxGame(InitState, 0, 0, 120, true));
+		addChild(new FlxGame(InitState, 1280, 720, 120, true));
 		addChild(fpsCounter = new FPSCounter(10, 10, 12));
 		fpsCounter.visible = Settings.data.fpsCounter;
 		addChild(awardsCard = new AwardCard());
+
+		#if mobile
+		fpsCounter.x += FlxG.game.x;
+		fpsCounter.y += FlxG.game.y;
+		#end
 
 		@:privateAccess FlxG.keys._nativeCorrection.set("0_43", FlxKey.PLUS);
 	}
@@ -104,6 +121,13 @@ class Main extends Sprite {
 
 class InitState extends flixel.FlxState {
 	override function create():Void {
+		#if mobile
+		if (!CopyState.checkExistingFiles())
+		{
+			flixel.FlxG.switchState(new CopyState());
+			return;
+		}
+		#end
 		setDefines();
 		flixel.FlxG.switchState(new TitleState());
 	}
@@ -113,7 +137,9 @@ class InitState extends flixel.FlxState {
 		Controls.load();
 		Settings.load();
 		Scores.load();
+		#DISCORD_ALLOWED
 		DiscordClient.start();
+		#end
 		Addons.load();
 		Awards.load();
 		Meta.cacheFiles();
@@ -130,6 +156,9 @@ class InitState extends flixel.FlxState {
 		FlxG.drawFramerate = FlxG.updateFramerate = Settings.data.framerate;
 		FlxG.game.focusLostFramerate = Math.floor(Settings.data.framerate / 4);
 		FlxG.keys.preventDefaultKeys = [TAB];
+		#if android
+		FlxG.android.preventDefaultKeys = [BACK];
+		#end
 		FlxG.cameras.useBufferLocking = true;
 		FlxG.autoPause = Settings.data.autoPause;
 		FlxAudioHandler.init();
