@@ -20,7 +20,7 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-package backend;
+package funkin.mobile;
 
 import openfl.events.UncaughtErrorEvent;
 import openfl.events.ErrorEvent;
