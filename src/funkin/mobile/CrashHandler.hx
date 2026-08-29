@@ -97,7 +97,7 @@ class CrashHandler
 		saveErrorMessage('$m\n$stackLabel');
 		#end
 
-		funkin.mobile.backend.StorageUtil.showPopUp('$m\n$stackLabel', "Error!");
+		showPopUp('$m\n$stackLabel', "Error!");
 		#if DISCORD_ALLOWED DiscordClient.shutdown(); #end
 		lime.system.System.exit(1);
 	}
@@ -116,7 +116,7 @@ class CrashHandler
 		saveErrorMessage(log.join('\n'));
 		#end
 
-		funkin.mobile.backend.StorageUtil.showPopUp(log.join('\n'), "Critical Error!");
+		showPopUp(log.join('\n'), "Critical Error!");
 		#if DISCORD_ALLOWED DiscordClient.shutdown(); #end
 		lime.system.System.exit(1);
 	}
