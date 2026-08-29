@@ -66,7 +66,7 @@ class CopyState extends FlxState
 			return;
 		}
 
-		showPopUp("Seems like you have some missing files that are necessary to run the game\nPress OK to begin the copy process", "Notice!");
+		funkin.mobile.backend.StorageUtil.showPopUp("Seems like you have some missing files that are necessary to run the game\nPress OK to begin the copy process", "Notice!");
 
 		shouldCopy = true;
 
@@ -111,7 +111,7 @@ class CopyState extends FlxState
 			{
 				if (failedFiles.length > 0)
 				{
-					showPopUp(failedFiles.join('\n'), 'Failed To Copy ${failedFiles.length} File.');
+					funkin.mobile.backend.StorageUtil.showPopUp(failedFiles.join('\n'), 'Failed To Copy ${failedFiles.length} File.');
 					final folder:String = #if android StorageUtil.getExternalStorageDirectory() + #else Sys.getCwd() + #end 'logs/';
 					if (!FileSystem.exists(folder))
 						FileSystem.createDirectory(folder);
