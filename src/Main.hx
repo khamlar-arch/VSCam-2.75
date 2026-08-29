@@ -137,7 +137,7 @@ class InitState extends flixel.FlxState {
 		Controls.load();
 		Settings.load();
 		Scores.load();
-		#DISCORD_ALLOWED
+		#if DISCORD_ALLOWED
 		DiscordClient.start();
 		#end
 		Addons.load();
