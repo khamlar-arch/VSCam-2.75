@@ -41,9 +41,9 @@ class Main extends Sprite {
 		#end
 		#end
 
-		Lib.current.loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, onCrash);
+		// Lib.current.loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, onCrash);
 
-		addChild(new FlxGame(InitState, 1280, 720, 120, true));
+		addChild(new FlxGame(#if mobile !CopyState.checkExistingFiles() ? CopyState : #end InitState, 1280, 720, 120, true));
 		addChild(fpsCounter = new FPSCounter(10, 10, 12));
 		fpsCounter.visible = Settings.data.fpsCounter;
 		addChild(awardsCard = new AwardCard());
@@ -124,6 +124,7 @@ class Main extends Sprite {
 
 class InitState extends flixel.FlxState {
 	override function create():Void {
+	/*
 		#if mobile
 		if (!CopyState.checkExistingFiles())
 		{
@@ -131,6 +132,7 @@ class InitState extends flixel.FlxState {
 			return;
 		}
 		#end
+	*/
 		setDefines();
 		flixel.FlxG.switchState(new TitleState());
 	}
