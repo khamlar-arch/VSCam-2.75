@@ -23,7 +23,7 @@
 package funkin.mobile;
 
 #if mobile
-import funkin.states.TitleState;
+import Main.InitState;
 import lime.utils.Assets as LimeAssets;
 import openfl.utils.Assets as OpenFLAssets;
 import openfl.utils.ByteArray;
@@ -62,7 +62,7 @@ class CopyState extends FlxState
 		checkExistingFiles();
 		if (maxLoopTimes <= 0)
 		{
-			FlxG.resetGame();
+			flixel.FlxG.switchState(new InitState());
 			return;
 		}
 
@@ -120,7 +120,7 @@ class CopyState extends FlxState
 				
 				FlxG.sound.play(Paths.audio("menu_finish", 'sfx')).onComplete = () ->
 				{
-					FlxG.resetGame();
+					flixel.FlxG.switchState(new InitState());
 				};
 		
 				canUpdate = false;
