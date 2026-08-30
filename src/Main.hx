@@ -51,9 +51,6 @@ class Main extends Sprite {
 		#if mobile
 		fpsCounter.x += FlxG.game.x;
 		fpsCounter.y += FlxG.game.y;
-		#if android
-		FlxG.android.preventDefaultKeys = [BACK];
-		#end
 		#end
 
 		@:privateAccess FlxG.keys._nativeCorrection.set("0_43", FlxKey.PLUS);
@@ -124,15 +121,6 @@ class Main extends Sprite {
 
 class InitState extends flixel.FlxState {
 	override function create():Void {
-	/*
-		#if mobile
-		if (!CopyState.checkExistingFiles())
-		{
-			flixel.FlxG.switchState(new CopyState());
-			return;
-		}
-		#end
-	*/
 		setDefines();
 		flixel.FlxG.switchState(new TitleState());
 	}
@@ -156,11 +144,14 @@ class InitState extends flixel.FlxState {
 
 		FlxG.mouse.load(openfl.display.BitmapData.fromFile('assets/images/cursor.png'));
 
-		FlxG.fullscreen = Settings.data.fullscreen;
+		FlxG.fullscreen = #if mobile true #else Settings.data.fullscreen #end;
 		FlxG.fixedTimestep = false;
 		FlxG.drawFramerate = FlxG.updateFramerate = Settings.data.framerate;
 		FlxG.game.focusLostFramerate = Math.floor(Settings.data.framerate / 4);
 		FlxG.keys.preventDefaultKeys = [TAB];
+		#if android
+		FlxG.android.preventDefaultKeys = [BACK];
+		#end
 		FlxG.cameras.useBufferLocking = true;
 		FlxG.autoPause = Settings.data.autoPause;
 		FlxAudioHandler.init();
