@@ -140,13 +140,10 @@ class Paths {
 		return type + ((subFolder != null && subFolder.length != 0) ? '$subFolder/$key' : key);
 	}
 
-	public static function get(path:String, ?subFolder:String, ?overrideAddons:Bool = false, absolute:Bool = true):String {
+	public static function get(path:String, ?subFolder:String, ?overrideAddons:Bool = false):String {
 		if (subFolder != null && subFolder.length != 0) path = '$subFolder/$path';
 
-		var absPath:String = '';
-		#if mobile 
-		if (absolute) absPath = Sys.getCwd();
-		#end
+		final folder:String = #if android StorageUtil.getExternalStorageDirectory() #else Sys.getCwd() #end;
 
 		#if ADDONS_ALLOWED
 		// start by checking the current addon
@@ -155,11 +152,11 @@ class Paths {
 		
 		// will ignore addons entirely and just use the path given from assets instead if it exists
 		if (overrideAddons) {
-			if (FileSystem.exists('assets/$path')) return absPath + 'assets/$path';
+			if (FileSystem.exists('assets/$path')) return folder + 'assets/$path';
 		}
 
 		// if the file doesn't exist in the current played addon
-		if (FileSystem.exists(finalPath())) return absPath + finalPath();
+		if (FileSystem.exists(finalPath())) return folder + finalPath();
 
 		// run through the other addons
 		if (Addons.list.length > 0) {
@@ -167,13 +164,13 @@ class Paths {
 				if (addon.disabled) continue;
 
 				mainDirectory = 'addons/${addon.id}';
-				if (FileSystem.exists(finalPath())) return absPath + finalPath();
+				if (FileSystem.exists(finalPath())) return folder + finalPath();
 			}
 		}
 		#end
 
 		// if that doesn't exist there OneOfTwo just return assets
-		return absPath + 'assets/$path';
+		return folder + 'assets/$path';
 	}
 
 	// images
@@ -323,7 +320,7 @@ class Paths {
 		final cacheKey = getCacheKey(path, "ANI", subFolder);
 		if (cachedAssets.exists(cacheKey)) return cachedAssets.get(cacheKey);
 
-		final folder:String = get(path, subFolder, true, false);
+		final folder:String = get(path, subFolder, true);
 		if (!FileSystem.exists(folder)) return null;
 		if (!localTrackedAssets.contains(cacheKey)) localTrackedAssets.push(cacheKey);
 
@@ -373,7 +370,7 @@ class Paths {
 		final cacheKey = getCacheKey(path, "SPR", subFolder);
 		if (cachedAssets.exists(cacheKey)) return cachedAssets.get(cacheKey);
 
-		final dataFile:String = get('$path.xml', subFolder, true, false);
+		final dataFile:String = get('$path.xml', subFolder, true);
 		if (!FileSystem.exists(dataFile)) return null;
 		if (!localTrackedAssets.contains(cacheKey)) localTrackedAssets.push(cacheKey);
 
@@ -386,7 +383,7 @@ class Paths {
 		final cacheKey = getCacheKey(path, "PAK", subFolder);
 		if (cachedAssets.exists(cacheKey)) return cachedAssets.get(cacheKey);
 
-		final dataFile:String = get('$path.txt', subFolder, true, false);
+		final dataFile:String = get('$path.txt', subFolder, true);
 		if (!FileSystem.exists(dataFile)) return null;
 		if (!localTrackedAssets.contains(cacheKey)) localTrackedAssets.push(cacheKey);
 
@@ -399,7 +396,7 @@ class Paths {
 		final cacheKey = getCacheKey(path, "ASE", subFolder);
 		if (cachedAssets.exists(cacheKey)) return cachedAssets.get(cacheKey);
 
-		final dataFile:String = get('$path.json', subFolder, true, false);
+		final dataFile:String = get('$path.json', subFolder, true);
 		if (!FileSystem.exists(dataFile)) return null;
 		if (!localTrackedAssets.contains(cacheKey)) localTrackedAssets.push(cacheKey);
 
