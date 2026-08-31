@@ -143,7 +143,7 @@ class Paths {
 	public static function get(path:String, ?subFolder:String, ?overrideAddons:Bool = false):String {
 		if (subFolder != null && subFolder.length != 0) path = '$subFolder/$path';
 
-		final folder:String = Sys.getCwd();
+		final folder:String = haxe.io.Path.addTrailingSlash(Sys.getCwd());
 
 		#if ADDONS_ALLOWED
 		// start by checking the current addon
